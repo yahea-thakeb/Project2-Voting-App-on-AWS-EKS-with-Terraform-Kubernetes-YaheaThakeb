@@ -1,0 +1,34 @@
+- name: Configure frontend with Result
+  hosts: resultgroup
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Create Docker network
+      docker_network:
+        name: back-tier
+        driver: bridge
+
+    - name: Pull result image
+      docker_image:
+        name: yahea_thakeb/result
+        tag: latest
+        source: pull
+
+    - name: Run Result (connect to Postgres on C)
+      docker_container:
+        name: result
+        image: yahea_thakeb/result:latest
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "80:80"
+        networks:
+          - name: back-tier
+        recreate: true
+        env:
+          PG_HOST: "10.0.2.197" # <-- Postgres private IP
+          PG_PORT: "5432"
+          PG_USER: "postgres"
+          PG_PASSWORD: "postgres"
+          PG_DATABASE: "postgres"

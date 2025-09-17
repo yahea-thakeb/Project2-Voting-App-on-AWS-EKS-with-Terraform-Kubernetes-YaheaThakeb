@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vote-result-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-http
+spec:
+  tls:
+    - hosts:
+        - vote.yahea_thakebsiddiquiaws.info
+        - result.yahea_thakebsiddiquiaws.info
+      secretName: vote-result-tls
+  rules:
+    - host: vote.yahea_thakebsiddiquiaws.info
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vote
+                port:
+                  number: 80
+    - host: result.yahea_thakebsiddiquiaws.info
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: result
+                port:
+                  number: 80

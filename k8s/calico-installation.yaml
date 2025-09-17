@@ -1,0 +1,9 @@
+# calico-installation.yaml
+apiVersion: operator.tigera.io/v1
+kind: Installation
+metadata:
+  name: default
+spec:
+  calicoNetwork:
+    bgp: Disabled   # No BGP needed in EKS
+  variant: Calico

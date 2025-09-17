@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug
+spec:
+  containers:
+    - name: debug
+      image: nicolaka/netshoot # includes nc, dig, curl, redis-cli, psql, etc.
+      command: ["sleep", "3600"]

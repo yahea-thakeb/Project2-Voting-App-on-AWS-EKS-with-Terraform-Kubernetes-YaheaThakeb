@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: result
+  template:
+    metadata:
+      labels:
+        app: result
+    spec:
+      nodeSelector:
+        role: frontend
+      containers:
+        - name: result
+          image: yahea_thakeb/result:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: PG_HOST
+              value: postgres
+            - name: PG_PORT
+              value: "5432"
+            - name: PG_USER
+              value: postgres
+            - name: PG_PASSWORD
+              value: postgres
+            - name: PG_DATABASE
+              value: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: result
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: result
+  type: ClusterIP
